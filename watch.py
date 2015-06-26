@@ -1,4 +1,5 @@
 import os
+import re
 import json
 from shutil import copy
 import logging
@@ -24,6 +25,12 @@ logger.addHandler(logging.StreamHandler())
 OMDB_URL = 'http://www.omdbapi.com/?'
 
 
+def camelcase_to_underscore(string):
+    """Convert string from ``CamelCase`` to ``under_score``."""
+    return (re.sub('((?<=[a-z0-9])[A-Z]|(?!^)[A-Z](?=[a-z]))', r'_\1', string)
+            .lower())
+
+
 def omdb(title, year=None):
     """ Fetch data from OMDB API. """
     params = {'t': title, 'plot': 'full', 'type': 'movie', 'tomatoes': 'true'}
@@ -35,11 +42,14 @@ def omdb(title, year=None):
 
     data = json.load(urlopen(url))
 
-    # Todo: Handle errors?
-    if data['Response'] == 'False':
-        data = None
+    rv = {}
+    for key, val in data.items():
+        rv[camelcase_to_underscore(key)] = val
 
-    return data, url
+    if rv['response'] == 'False':
+        rv = None
+
+    return rv, url
 
 
 def get_movie_info(path):
