@@ -1,5 +1,6 @@
 import os
 import json
+from shutil import copy
 import logging
 
 # Todo: Remove dependency on omdb module and
@@ -34,17 +35,22 @@ if __name__ == '__main__':
 
         print("Processing: %s" % video_path)
 
-        movie_data = video_path + ".movie-data"
+        movie_json = video_path + ".json"
 
         try:
-            with open(movie_data) as inp:
+            with open(movie_json) as inp:
                 omdb_data = json.load(inp)
 
         except IOError, e:
             omdb_data = get_movie_info(video_path)
 
-            with open(movie_data, "w") as out:
+            with open(movie_json, "w") as out:
                 json.dump(omdb_data, out, indent=2)
+
+        # Copy these movie-data files to a folder
+        # so I can have a list of all installed movies :)
+        file = "%s - %s.json" % (omdb_data["year"], omdb_data["title"])
+        copy(movie_json, os.path.expanduser("~/Movies/%s" % file))
 
         # Group the movies according to categories and sort the categories
         # according to ratings
