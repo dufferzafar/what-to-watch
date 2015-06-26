@@ -55,6 +55,10 @@ def omdb(title, year=None):
 def get_movie_info(path):
     """Find movie information from a `path` to file."""
 
+    # I've added this string to files that don't exist on OMDB
+    if 'omdb' in path:
+        return None
+
     # Use the guessit module to find details of a movie from name
     file = guess_file_info(os.path.basename(path))
 
