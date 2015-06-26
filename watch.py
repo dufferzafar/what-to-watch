@@ -33,7 +33,7 @@ def camelcase_to_underscore(string):
 
 def omdb(title, year=None):
     """ Fetch data from OMDB API. """
-    params = {'t': title, 'plot': 'full', 'type': 'movie', 'tomatoes': 'true'}
+    params = {'t': title.encode('ascii', 'ignore'), 'plot': 'full', 'type': 'movie', 'tomatoes': 'true'}
     if year:
         params['y'] = year
 
