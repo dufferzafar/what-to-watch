@@ -5,7 +5,7 @@ import logging
 
 # Todo: Remove dependency on omdb module and
 # use the api directly?
-import omdb
+from urllib import urlopen, urlencode
 
 from guessit import guess_file_info
 
@@ -21,17 +21,37 @@ logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
 
 
+OMDB_URL = 'http://www.omdbapi.com/?'
+
+
+def omdb(title, year=None):
+    """ Fetch data from OMDB API. """
+    params = {'t': title, 'plot': 'full', 'type': 'movie', 'tomatoes': 'true'}
+    if year:
+        params['y'] = year
+
+    url = OMDB_URL + urlencode(params)
+    logger.info('\033[33m' + "Fetching URL: %s" % url + '\033[0m')
+
+    data = json.load(urlopen(url))
+
+    # Todo: Handle errors?
+    if data['Response'] == 'False':
+        data = None
+
+    return data, url
+
+
 def get_movie_info(path):
     """Find movie information from a `path` to file."""
 
-    # logger.info("Getting info for: %s" % os.path.basename(video_path))
-
     # Use the guessit module to find details of a movie from name
-    file = guess_file_info(os.path.basename(video_path))
+    file = guess_file_info(os.path.basename(path))
 
-    # Use omdb module to find ratings, genre etc. from title and year
-    return omdb.get(title=file['title'], year=file['year'],
-                    fullplot=True, tomatoes=True)
+    # Use omdb to find ratings, genre etc. from title and year
+    data, url = omdb(file['title'], file.get('year'))
+
+    return data
 
 
 if __name__ == '__main__':
