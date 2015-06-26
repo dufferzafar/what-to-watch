@@ -1,5 +1,4 @@
 import os
-import json
 import logging
 
 
@@ -22,8 +21,8 @@ def scan_video(path):
     :param string path: absolute path to the video
     """
 
-    if os.path.getsize(path) < 10485760:
-        raise ValueError("Size less than 10 MB")
+    if os.path.getsize(path) < (25 * 10124 * 1024):
+        raise ValueError("Size less than 25 MB")
 
     # Todo: Should some processing happen here?
     return path
