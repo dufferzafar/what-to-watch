@@ -61,18 +61,27 @@ def get_movie_info(path):
     # Use omdb to find ratings, genre etc. from title and year
     data, url = omdb(file['title'], file.get('year'))
 
-    # Use only the longest word and the year to search
+    # Use the longest word as a title
     if not data:
         logger.warning('\033[35m' + "OMDB 404 - %s. Retrying with longest word!" % url + '\033[0m')
         data, url = omdb(max(file['title'].split(), key=len), file.get('year'))
 
-    # Use the first word and the year to search
+    # Use the first word as title
     if not data:
         logger.warning('\033[35m' + "OMDB 404 - %s. Retrying with first word!" % url + '\033[0m')
         data, url = omdb(file['title'].split()[0], file.get('year'))
 
+    # Still no luck :'(
     if not data:
         logger.warning('\033[35m' + "OMDB 404 - %s." % url + '\033[0m')
+        return data
+
+    # BUG: What if we end up fetching data of some other movie?
+    if file['title'] != data['title']:
+        logger.warning('\033[32m' + "Titles don't match: %s - %s" % (file['title'], data['title']) + '\033[0m')
+
+    # Save the path to this movie in the data
+    data['movie_path'] = path
 
     return data
 
