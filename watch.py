@@ -62,6 +62,10 @@ def get_movie_info(path):
     # Use the guessit module to find details of a movie from name
     file = guess_file_info(os.path.basename(path))
 
+    # BUG: Use some heuristics here too?
+    if 'title' not in file:
+        return None
+
     # Use omdb to find ratings, genre etc. from title and year
     data, url = omdb(file['title'], file.get('year'))
 
