@@ -1,0 +1,2 @@
+# The paths to search for movies
+PATHS = []

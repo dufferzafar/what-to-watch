@@ -4,6 +4,14 @@ I have a whole lot of unwatched movies, and deciding what to watch is not an eas
 
 Let's automate!
 
+# Usage
+
+Copy the sample config file: `cp config.py.example config.py`
+
+Add folder paths in the PATHS list.
+
+Run `python watch.py`
+
 # Todo
 
 This can seriously become a movie database 'tagger' like Picard - all it needs is a sleek GUI.

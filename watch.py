@@ -10,6 +10,7 @@ from urllib import urlopen, urlencode
 
 from guessit import guess_file_info
 
+from config import PATHS
 from scanner import scan_videos
 
 # Disable logging for scanner
@@ -95,7 +96,7 @@ def get_movie_info(path):
 
 
 if __name__ == '__main__':
-    videos = scan_videos(["/mnt/Entertainment/Movies"])
+    videos = scan_videos(PATHS)
 
     for video_path in videos:
 
