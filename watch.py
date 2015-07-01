@@ -34,7 +34,10 @@ def camelcase_to_underscore(string):
 
 def omdb(title, year=None):
     """ Fetch data from OMDB API. """
-    params = {'t': title.encode('ascii', 'ignore'), 'plot': 'full', 'type': 'movie', 'tomatoes': 'true'}
+    params = {'t': title.encode('ascii', 'ignore'),
+              'plot': 'full',
+              'type': 'movie',
+              'tomatoes': 'true'}
     if year:
         params['y'] = year
 
@@ -72,12 +75,16 @@ def get_movie_info(path):
 
     # Use the longest word as a title
     if not data:
-        logger.warning('\033[35m' + "OMDB 404 - %s. Retrying with longest word!" % url + '\033[0m')
+        logger.warning('\033[35m' +
+                       "OMDB 404 - %s. Retrying with longest word!" % url +
+                       '\033[0m')
         data, url = omdb(max(file['title'].split(), key=len), file.get('year'))
 
     # Use the first word as title
     if not data:
-        logger.warning('\033[35m' + "OMDB 404 - %s. Retrying with first word!" % url + '\033[0m')
+        logger.warning('\033[35m' +
+                       "OMDB 404 - %s. Retrying with first word!" % url +
+                       '\033[0m')
         data, url = omdb(file['title'].split()[0], file.get('year'))
 
     # Still no luck :'(
@@ -87,7 +94,9 @@ def get_movie_info(path):
 
     # BUG: What if we end up fetching data of some other movie?
     if file['title'] != data['title']:
-        logger.warning('\033[32m' + "Titles don't match: %s - %s" % (file['title'], data['title']) + '\033[0m')
+        logger.warning('\033[32m' +
+                       "Titles don't match: %s - %s" % (file['title'], data['title']) +
+                       '\033[0m')
 
     # Save the path to this movie in the data
     data['movie_path'] = path
@@ -112,7 +121,9 @@ if __name__ == '__main__':
             info = get_movie_info(video_path)
 
             if not info:
-                logger.error('\033[31m' + "No info found for: %s" % video_path + '\033[0m')
+                logger.error('\033[31m' +
+                             "No info found for: %s" % video_path +
+                             '\033[0m')
                 continue
 
             with open(movie_json, "w") as out:
