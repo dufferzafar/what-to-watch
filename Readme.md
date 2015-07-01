@@ -4,6 +4,8 @@ I have a whole lot of unwatched movies, and deciding what to watch is not an eas
 
 Let's automate!
 
+![Scanning all my movies](screenshot.png)
+
 # Usage
 
 Copy the sample config file: `cp config.py.example config.py`
