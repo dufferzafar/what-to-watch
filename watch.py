@@ -4,8 +4,6 @@ import json
 from shutil import copy
 import logging
 
-# Todo: Remove dependency on omdb module and
-# use the api directly?
 from urllib import urlopen, urlencode
 
 from guessit import guess_file_info
@@ -21,7 +19,6 @@ logger.addHandler(logging.NullHandler())
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
-
 
 OMDB_URL = 'http://www.omdbapi.com/?'
 
@@ -70,6 +67,9 @@ def get_movie_info(path):
     if 'title' not in file:
         return None
 
+    if not file['title']:
+        return None
+
     # Use omdb to find ratings, genre etc. from title and year
     data, url = omdb(file['title'], file.get('year'))
 
@@ -116,6 +116,14 @@ if __name__ == '__main__':
         try:
             with open(movie_json) as inp:
                 info = json.load(inp)
+
+            # Todo: What if I move the folder containing the movie to somewhere else
+            # the movie_path key in the json will then point to wrong place.
+            #
+            # Fix:
+            #
+            # if info['movie_path'] != video_path:
+            #     raise IOError
 
         except IOError, e:
             info = get_movie_info(video_path)
